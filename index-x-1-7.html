@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+   <title>Nome do jogo</title>
+   <script src="https://unpkg.com/kaboom/dist/kaboom.js"></script>
+   <style>
+      #gameScreen{
+         width: 400px;
+
+      }
+   </style>
+</head>
+<body>
+   <canvas id="gameScreen" width="500" style="width: 600px;"></canvas>
+   <script>
+      var canva = document.getElementById("gameScreen");
+      const ctx = kaboom({
+         width: 240,
+         height: 320,
+         background: [34, 156, 184],
+         canvas: document.getElementById("gameScreen")
+      });
+   </script>
+</body>
+</html>

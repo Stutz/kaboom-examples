@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <title>Nome do jogo</title>
+    <script src="https://unpkg.com/kaboom/dist/kaboom.js"></script>
+  </head>
+  <body>
+    <script>
+      kaboom({
+        background: [0, 0, 0],
+      });
+
+      const fimDoLoop = loop(1, () => {
+        const obj = add([
+          rect(10, 20),
+          color(255, 255, 255),
+          pos(rand(0, width()), rand(0, height())),
+        ]);
+
+        wait(20, () => {
+          destroy(obj);
+        });
+      });
+
+      onKeyPress("x", ()=>{
+        fimDoLoop();
+      })
+    </script>
+  </body>
+</html>

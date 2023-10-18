@@ -1,0 +1,79 @@
+'<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <title>Nome do jogo</title>
+    <script src="https://unpkg.com/kaboom/dist/kaboom.js"></script>
+  </head>
+  <body>
+    <script>
+      const ctx = kaboom({
+        width: 300,
+        height: 300,
+        background: [163, 164, 207],
+      });
+      ctx.setGravity(10);
+
+      const speed = 200;
+      const block = add([
+        rect(20, 40),
+        color(32, 34, 135),
+        outline(2, [146, 147, 224]),
+        pos(0, 0),
+        anchor("bot"),
+        health(10),
+        area(),
+        body(),
+        offscreen({destroy: true, distance:5}),
+      ]);
+
+      const food = add([
+        rect(20, 40),
+        color(120, 40, 100),
+        outline(2, [146, 147, 224]),
+        pos(150, 150),
+        area(),
+        "food"
+      ]);
+
+      block.onCollide("food", (obj)=>{
+        addKaboom(block.pos);
+        destroy(obj);
+        block.heal(2);
+      })
+      
+
+      block.onDestroy(()=>{
+        addKaboom(100,100);
+      });
+
+      onKeyDown("a", () => {
+        block.moveTo(30, 100);
+      });
+
+      onKeyDown("b", () => {
+        block.moveTo(100, 30);
+      });
+
+      onKeyDown("up", () => {
+        block.move(0, -speed);
+      });
+
+      onKeyDown("down", () => {
+        block.move(0, speed);
+      });
+
+      onKeyDown("left", () => {
+        block.move(-speed, 0);
+      });
+
+      onKeyDown("right", () => {
+        block.move(speed, 0);
+      });
+
+
+
+
+    </script>
+  </body>
+</html>
+'

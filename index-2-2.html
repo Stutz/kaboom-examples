@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <title>Nome do jogo</title>
+    <script src="https://unpkg.com/kaboom@next/dist/kaboom.js"></script>
+  </head>
+  <body>
+    <script>
+      kaboom({
+        background: [163, 164, 207],
+      });
+
+      const block = add([
+        rect(20, 40),
+        color(32, 34, 135),
+        outline(2, [146, 147, 224]),
+        pos(10, 20),
+        {
+          // Atributos
+          peso: 100,
+          material: "pedra",
+          resistencia: 5,
+          temperatura: 10,
+
+          // funcionalidades
+          power: function () {
+            return this.peso * this.resistencia;
+          },
+        },
+      ]);
+
+      Object.assign(block, {fuel: 55, foo: function (){return "foodeu";}});
+
+      console.log(block.foo());
+    </script>
+  </body>
+</html>
