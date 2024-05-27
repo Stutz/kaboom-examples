@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+   <title>Nome do jogo</title>
+   <script src="https://unpkg.com/kaboom/dist/kaboom.js"></script>
+</head>
+<body>
+   <script>
+      const k = kaboom({
+         background: [0,0,0],
+      });
+      k.setGravity(200);   
+      
+      const b = add([
+        pos(100,100),
+        rect(20,40),
+        area(),
+        offscreen({destroy: true}),
+        body({gravityScale: 0}),
+//        body({gravityScale: 1}),
+      ]);
+
+      onUpdate(()=>{
+         b.move(100, 0);
+      });
+
+      b.onDestroy(()=>{
+         addKaboom(center());
+      });
+
+//      console.log(k.getGravity());
+      
+      
+      const r = add([
+        rect(10,10),
+        pos(0,0)
+      ]);
+      
+      console.log(r.pos);
+   </script>
+</body>
+</html>
