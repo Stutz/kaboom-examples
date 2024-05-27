@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <title>Nome do jogo</title>
+    <script src="https://unpkg.com/kaboom/dist/kaboom.js"></script>
+  </head>
+  <body>
+    <script>
+      kaboom({
+        background: [163, 164, 207],
+      });
+
+      const info = add([
+        text("P=Pausa o loop, G=Ativa o loop, X=Encerra o loop"),
+        pos(10, 10),
+      ]);
+
+      const loopStatus = add([
+        text(""), 
+        pos(10, 50), 
+        { value: 0 }]);
+
+      const loopControl = loop(1, () => {
+        loopStatus.value++;
+        loopStatus.text = "Loop: " + loopStatus.value;
+      });
+
+      onKeyPress("x", () => {
+        loopStatus.text = "Loop encerrado!";
+        loopControl.cancel();
+      });
+
+      onKeyPress("p", () => {
+        if (loopControl.paused) return;
+        loopControl.paused = true;
+        loopStatus.text = "Loop pausado!";
+      });
+
+      onKeyPress("g", () => {
+        if (!loopControl.paused) return;
+        loopControl.paused = false;
+        loopStatus.text ="Loop ativado!";
+      });
+    </script>
+  </body>
+</html>

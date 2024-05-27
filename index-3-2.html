@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <title>Nome do jogo</title>
+    <script src="https://unpkg.com/kaboom/dist/kaboom.js"></script>
+  </head>
+  <body>
+    <script>
+      kaboom({
+        background: [128, 128, 128],
+      });
+      const score = add([
+        text("Pontos: 0"), 
+        pos(10, 4),
+        { value: 0 }
+      ]);
+      //...
+      console.log(score.text); // Retorna: "Pontos: 0"
+      // Adiciona 10 ao valor dos pontos
+      score.value += 10;
+      // Atualiza o texto do placar
+      score.text = "Pontos: " + score.value;
+      console.log(score.text); // Retorna: "Pontos: 10"
+    </script>
+  </body>
+</html>

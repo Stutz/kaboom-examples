@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <title>Nome do jogo</title>
+    <script src="https://unpkg.com/kaboom/dist/kaboom.js"></script>
+  </head>
+  <body>
+    <script>
+      kaboom({
+        background: [163, 164, 207],
+      });
+
+      const block = add([
+        rect(20, 40),
+        color(32, 34, 135),
+        outline(2, [146, 147, 224]),
+        pos(10, 20),
+      ]);
+
+      Object.assign(block, {
+        peso: 100,
+        material: "pedra",
+        resistencia: 5,
+        temperatura: 10,
+      });
+    </script>
+  </body>
+</html>
