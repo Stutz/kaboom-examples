@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <title>Hit the green brick - Acerte o tijolo verde</title>
+    <script src="https://unpkg.com/kaboom@next/dist/kaboom.js"></script>
+  </head>
+  <body>
+    <script>
+      // Parâmetros de controle
+      let paddleLength = 100;
+      let ballLength = 10;
+      let brickGrow = 50;
+      let gameState = "ready";
+
+      // Inicia o contexto do jogo
+      kaboom({
+        background: [220, 220, 220],
+      });
+
+      // Parede esquerda
+      add([
+        rect(20, height()),
+        color([102, 0, 24]),
+        pos(0, 0),
+        anchor("topleft"),
+        area(),
+        body({ isStatic: true }),
+        "wall",
+        "vWall",
+      ]);
+
+      // Parede direita
+      add([
+        rect(20, height()),
+        color([102, 0, 24]),
+        pos(width(), 0),
+        anchor("topright"),
+        area(),
+        body({ isStatic: true }),
+        "wall",
+        "vWall",
+      ]);
+      
+      // Piso
+      add([
+        rect(width(), 20),
+        color([102, 0, 24]),
+        pos(0, height()-20),
+        anchor("topleft"),
+        area(),
+        body({ isStatic: true }),
+        "floor",
+      ]);
+      
+      // barra verde
+      const bGreen = add([
+        rect(width() / 2 - 20, 50),
+        color([24, 150, 85]),
+        pos(20, 0),
+        area(),
+        body({ isStatic: true }),
+        "brickgreen",
+      ]);
+
+      // barra vermelha
+      const bRed = add([
+        rect(width() / 2 - 20, 50),
+        color([255, 0, 0]),
+        pos(width() / 2, 0),
+        area(),
+        body({ isStatic: true }),
+        "brickred",
+      ]);
+
+      // Rebatedor
+      const paddle = add([
+        rect(paddleLength, 20),
+        color([255, 255, 255]),
+        anchor("topleft"),
+        pos(width() / 2 - paddleLength/2, height() - 50),
+        outline(2),
+        area(),
+//        body({ isStatic: true }),
+        body({mass:1000}),
+        "paddle",
+        {
+          speed: 600,
+        }
+      ]);
+
+      const dir = add([
+        rect(ballLength,20),
+        pos(paddle.pos.x+paddle.width-ballLength, paddle.pos.y),
+        color([255,0,0]),
+
+      ]);
+
+      const esq = add([
+        rect(ballLength,20),
+        pos(paddle.pos.x, paddle.pos.y),
+        color([0,255,0]),
+
+      ]);
+
+      // Bola
+      const ball = add([
+        rect(ballLength, ballLength),
+        color(0, 0, 255),
+        pos(center()),
+        area(),
+        body(),
+        anchor("center"),
+        {
+          xVel: 0,
+          yVel: 0,
+          speed: 400,
+        },
+        "ball",
+      ]);
+
+      ball.onCollide("vWall", () => {
+         ball.xVel = -ball.xVel;
+      });
+
+      ball.onCollide("floor", () => {
+        ball.xVel = 0;
+        ball.yVel = 0;
+        ball.pos = center();
+        gameState = "ready";
+      });
+
+      ball.onCollide("brickgreen", () => {
+        ball.yVel = -ball.yVel;
+        bGreen.width -= brickGrow;
+        bRed.width += brickGrow;
+        bRed.pos.x -= brickGrow;
+      });
+
+      ball.onCollide("brickred", () => {
+        ball.yVel = -ball.yVel;
+        bGreen.width += brickGrow;
+        bRed.width -= brickGrow;
+        bRed.pos.x += brickGrow;
+      });
+
+      ball.onCollide("paddle", () => {
+        console.log(ball.pos);
+        console.log(paddle.pos);
+        let dX = ball.pos.x - paddle.pos.x;
+//console.log(dX);        
+        if (dX <= ballLength){
+          if (ball.xVel>0) ball.xVel = -ball.xVel;
+          console.log("Esquerda");
+        }else if (dX >= paddle.width-ballLength){
+          if (ball.xVel<0) ball.xVel = -ball.xVel;
+          console.log("Direita");
+        }else{
+          let dc = (paddle.pos.x + paddle.width/2) - ball.pos.x;
+          let a = (paddle.width/2 * ball.yVel)/ball.xVel;
+          let b = paddle.width/2 + dc;
+          let h = Math.sqrt(a*a+b*b);
+          ball.xVel = (a/h) * ball.speed;
+          ball.yVel = (b/h) * ball.speed;
+          console.log("Centro");
+        }
+        ball.yVel = -ball.yVel;
+      });
+
+      ball.onUpdate(() => {
+        if (gameState == "go") {
+          ball.move(ball.xVel, ball.yVel);
+        }
+      });
+
+      // Tratamento de eventos gerais      
+      onKeyDown("left", () => {
+        paddle.move(-paddle.speed, 0);
+        dir.move(-paddle.speed, 0);
+        esq.move(-paddle.speed, 0);
+      });
+
+      onKeyDown("right", () => {
+        paddle.move(paddle.speed, 0);
+        dir.move(paddle.speed, 0);
+        esq.move(paddle.speed, 0);
+      });
+
+      onKeyPress("space", () => {
+        if (gameState == "ready") {
+          gameState = "go";
+          let tetha = rand(20, 60);
+          if (rand(0,9) >= 5) tetha +=90;
+          tetha = (tetha * Math.PI) / 180; // Radiano
+
+          ball.xVel = Math.cos(tetha) * ball.speed;
+          ball.yVel = Math.sin(tetha) * ball.speed;
+          console.log(tetha, ball.xVel, ball.yVel);
+        }
+      });
+
+    </script>
+  </body>
+</html>

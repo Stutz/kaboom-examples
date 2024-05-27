@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <title>Nome do jogo</title>
+    <script src="https://unpkg.com/kaboom/dist/kaboom.js"></script>
+  </head>
+  <body>
+    <script>
+      kaboom({
+        background: [128, 128, 128],
+      });
+
+      const block = add([
+        rect(20, 40),
+        color(32, 34, 135),
+        outline(2, [146, 147, 224]),
+        pos(50, 100),
+        area(),
+        body(),
+        move(RIGHT, 100),
+      ]);
+
+      const wall = add([
+        rect(20, 140),
+        color(132, 40, 22),
+        outline(2, [16, 47, 22]),
+        pos(200, 50),
+        area(),
+        body(),
+        "muro",
+      ]);
+
+      block.onCollide("muro", (obj) => {
+        addKaboom(obj.pos);
+      });
+    </script>
+  </body>
+</html>

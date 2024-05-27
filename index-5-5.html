@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <title>Nome do jogo</title>
+    <script src="https://unpkg.com/kaboom/dist/kaboom.js"></script>
+  </head>
+  <body>
+    <script>
+      kaboom({
+        background: [128, 128, 128],
+      });
+
+      const speed = 300;
+
+      const placar = add([text("Energia: 0"), pos(10, 10)]);
+
+      const player = add([
+        rect(20, 40),
+        color(32, 34, 135),
+        outline(2, [146, 147, 224]),
+        pos(50, 100),
+        area(),
+        health(0),
+      ]);
+
+      loop(2, () => {
+        let d2 = randi(2); // Roleta: Energia ou fogo?
+        if (d2 == 1) {
+          const energy = add([
+            circle(20),
+            color(255, 255, 51),
+            outline(2, [255, 128, 0]),
+            pos(rand(0, width()), rand(0, height())),
+            area(),
+            "energia",
+          ]);
+        } else {
+          const fire = add([
+            circle(20),
+            color(255, 0, 0),
+            outline(2, [255, 128, 0]),
+            pos(rand(0, width()), rand(0, height())),
+            area(),
+            "fogo",
+          ]);
+        }
+      });
+
+      player.onCollide("energia", (obj) => {
+        addKaboom(player.pos);
+        player.heal();
+        destroy(obj);
+        placar.text = "Energia: " + player.hp();
+      });
+
+      player.onCollide("fogo", (obj) => {
+        addKaboom(player.pos);
+        player.hurt();
+        destroy(obj);
+        placar.text = "Energia: " + player.hp();
+      });
+
+      player.onDeath(() => {
+        addKaboom(player.pos);
+        destroy(player);
+        add([text("Game Over!"), pos(center())]);
+      });
+
+      onKeyDown("up", () => {
+        player.move(0, -speed);
+      });
+
+      onKeyDown("down", () => {
+        player.move(0, speed);
+      });
+
+      onKeyDown("left", () => {
+        player.move(-speed, 0);
+      });
+
+      onKeyDown("right", () => {
+        player.move(speed, 0);
+      });
+    </script>
+  </body>
+</html>
